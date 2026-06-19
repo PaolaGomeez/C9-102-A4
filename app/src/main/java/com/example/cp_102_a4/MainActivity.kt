@@ -1,4 +1,4 @@
-package com.example.c9_102_a3
+package com.example.cp_102_a4
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -65,7 +65,6 @@ fun UserProfileScreen() {
     var newAge by remember { mutableStateOf(user1.age.toString()) }
     var newFriendName by remember { mutableStateOf("") }
 
-
     val backgroundColor = when (user1.getAgeGroup(user1.age)) {
         "Child" -> Color(0xFFD2D2D2)
         "Teenager" -> Color(0xFFCCFFCE)
@@ -100,8 +99,7 @@ fun UserProfileScreen() {
             },
             onRemoveFriend = { friendName ->
                 user1.removeFriend(friendList = friends, friendName)
-            },
-            onResetLikes = { user1 = user1.copy(likesCount = 0) }
+            }
         )
     }
 }
@@ -119,13 +117,13 @@ fun ProfileContent(
     onLike: () -> Unit,
     onUpdateProfile: () -> Unit,
     onAddFriend: () -> Unit,
-    onRemoveFriend: (String) -> Unit,
-    onResetLikes: () -> Unit
+    onRemoveFriend: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(all = 16.dp)
+            .padding(top = 32.dp)
     ) {
         UserProfileCard(user)
 
@@ -176,24 +174,19 @@ fun ProfileContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        Button(
+            onClick = onLike,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Like")
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         FriendList(
             friends = friends,
             onRemoveFriend = onRemoveFriend
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Button(
-                onClick = onLike,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Like")
-            }
-        }
     }
 }
 
@@ -208,8 +201,8 @@ fun UserProfileCard(user: User) {
         Column(
             modifier = Modifier.padding(all = 16.dp)
         ) {
-            Text(text = "${user.fullName}")
-            Text(text = "${user.username}")
+            Text(text = "Name: ${user.fullName}")
+            Text(text = "Username: ${user.username}")
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Age: ${user.age}")
             Text(text = "Birthday: ${user.birthday}")
@@ -237,7 +230,7 @@ fun FriendList(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(220.dp)
+                .height(200.dp)
         ) {
             items(friends) { friend ->
                 FriendItem(
